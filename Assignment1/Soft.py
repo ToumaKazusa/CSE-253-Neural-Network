@@ -1,11 +1,12 @@
 from Loader import MNIST
 import numpy as np
 
+# Fix step length, load data
 step = 0.0000000000000001
 [ims, labels] = MNIST().load_training()
 
 
-
+# Create training set and verification set
 for i in range(20000):
 	ims[i].append(1)
 
@@ -28,8 +29,8 @@ for i in range(2000):
 	temp[0][labels[i + 18000]] = 1
 	lbs_v.append(temp)
 
+# Initial weight matrix of Softmax Classifier
 weight = np.zeros((785, 10))
-
 
 for loop in range(1000):
 	det = np.zeros((785, 10))
