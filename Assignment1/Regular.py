@@ -2,6 +2,7 @@ from Loader import MNIST
 import numpy as np
 
 step = 0.00000000015
+regular = - 0.01
 [ims, labels] = MNIST().load_training()
 
 
@@ -32,6 +33,7 @@ for loop in range(1000):
 	for i in range(m):
 		y = ims_t[i].dot(weight)
 		det += (lab_t[i] - y[0][0]) * ims_t[i].T
+	weight = np.add(weight, regular * weight)
 	weight = np.add(weight, step * det)
 
 	fn = 0
@@ -48,3 +50,4 @@ for loop in range(1000):
 	print("false positive:" + str(fp))
 	print("error:" + str(err))
 	print("---------------")
+	
