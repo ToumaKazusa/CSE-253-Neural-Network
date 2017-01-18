@@ -3,7 +3,7 @@ import numpy as np
 import math
 import matplotlib.pyplot as pl
 # Fix step length, load data
-step = 0.001
+step = 0.0001
 [ims, labels] = MNIST().load_training()
 
 
@@ -40,10 +40,11 @@ for loop in range(1000):
 		a = ims_t[i].dot(weight)
 		y = 1 / (1 + math.exp(- a[0][0]))
 		det += (lab_t[i] - y) * ims_t[i].T
-		err += abs(lab_t[i] - y)
-	weight = np.add(weight, step * det)
+	        err += lab_t[i]*math.log(y) + (1 - lab_t[i])*math.log(1-y)
+        weight = np.add(weight, step * det)
 	# print("error:" + str(err))
-        err_train.append(err)
+        err_train.append(-err)
+        print err
 
 	# Calculate error rate on verification set
 	fn = 0
@@ -56,8 +57,8 @@ for loop in range(1000):
 			fn += 1
 		if lab_v[i] - y > 0.5:
 			fp += 1
-		err += abs(lab_v[i] - y)
-	err_hold_on.append(err)
+	        err += lab_v[i]*math.log(y) + (1 - lab_v[i])*math.log(1-y)
+	err_hold_on.append(-err)
 	print("false negative:" + str(fn))
 	print("false positive:" + str(fp))
 	print("error:" + str(err))
