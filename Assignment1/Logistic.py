@@ -1,7 +1,7 @@
 from Loader import MNIST
 import numpy as np
 import math
-
+import matplotlib.pyplot as pl
 # Fix step length, load data
 step = 0.01
 [ims, labels] = MNIST().load_training()
@@ -29,16 +29,21 @@ lab_t = label[0:m]
 lab_v = label[m:n]
 
 weight = np.zeros((785, 1))
-
+err_train = []
+err_hold_on = []
 # Fixed loop, using gradient descent
 for loop in range(1000):
 	# Update weight
 	det = np.zeros((785, 1))
+        err = 0
 	for i in range(m):
 		a = ims_t[i].dot(weight)
 		y = 1 / (1 + math.exp(- a[0][0]))
 		det += (lab_t[i] - y) * ims_t[i].T
+		err += abs(lab_t[i] - y)
 	weight = np.add(weight, step * det)
+	# print("error:" + str(err))
+        err_train.append(err)
 
 	# Calculate error rate on verification set
 	fn = 0
@@ -52,7 +57,12 @@ for loop in range(1000):
 		if lab_v[i] - y > 0.5:
 			fp += 1
 		err += abs(lab_v[i] - y)
+	err_hold_on.append(err)
 	print("false negative:" + str(fn))
 	print("false positive:" + str(fp))
 	print("error:" + str(err))
 	print("---------------")
+pl.plot(err_train)
+pl.show()
+pl.plot(err_hold_on)
+pl.show()
