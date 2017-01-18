@@ -31,6 +31,22 @@ for i in range(2000):
 	temp[0][labels[i + 18000]] = 1
 	lbs_v.append(temp)
 
+
+# Load testing samples
+[ims, labels] = MNIST().load_testing()
+
+ims_test = []
+lbs_test = []
+
+for i in range(2000):
+	ims[i].append(1)
+	temp = np.array(ims[i]).reshape(1, 785) / 255.0
+	ims_test.append(temp)
+	temp = np.zeros((1, 10))
+	temp[0][labels[i]] = 1
+	lbs_test.append(temp)
+
+
 # Initial weight matrix of Softmax Classifier
 weight = np.zeros((785, 10))
 
