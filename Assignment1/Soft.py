@@ -87,10 +87,10 @@ for loop in range(1000):
 		det += ims_t[i].T.dot(e)	
 	weight = np.add((1 - regular) * weight, step * det)
 	print("-------Training------------")
-	print("False Sample: " + str(false))
-	print("Total Error: " + str(error))
+	print("False Rate: " + str(false / 18000.0))
+	print("Total Loss: " + str(error))
+	false_training.append(false / 18000.0)
 	error_training.append(error)
-	false_training.append(false)
 
 	false = 0
 	error = 0
@@ -108,10 +108,10 @@ for loop in range(1000):
 		if lbs_test[i][0][m] == 0:
 			false += 1
 	print("-------Testing------------")
-	print("False Sample: " + str(false))
-	print("Total Error: " + str(error))
+	print("False Rate: " + str(false / 2000.0))
+	print("Total Loss: " + str(error))
+	false_testing.append(false / 2000.0)
 	error_testing.append(error)
-	false_testing.append(false)
 
 
 	false = 0
@@ -130,10 +130,10 @@ for loop in range(1000):
 		if lbs_t[i][0][m] == 0:
 			false += 1
 	print("-------Verification-------")
-	print("false:" + str(false))
-	print("error:" + str(error))
+	print("False Rate:" + str(false / 2000.0))
+	print("Total Loss:" + str(error))
+	false_verification.append(false / 2000.0)
 	error_verification.append(error)
-	false_verification.append(false)
 	if false > false_min * 0.999 and error > error_min * 0.999:
 		break
 	if false < false_min:
