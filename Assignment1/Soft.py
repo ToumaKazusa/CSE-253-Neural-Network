@@ -46,22 +46,73 @@ for i in range(2000):
 	temp[0][labels[i]] = 1
 	lbs_test.append(temp)
 
+error_training = []
+false_training = []
+
+error_testing = []
+false_testing = []
+
+error_verification = []
+false_verification = []
 
 # Initial weight matrix of Softmax Classifier
 weight = np.zeros((785, 10))
+false_min = 2000.0
+error_min = 2000.0
 
 for loop in range(1000):
-	
+	print("==============================")
+	print("Loop: " + str(loop))
+
 	det = np.zeros((785, 10))
+	false = 0
+	error = 0
 	for i in range(18000):
 		a = ims_t[i].dot(weight)
 		y = np.zeros((1, 10))
 		for j in range(10):
 			y[0][j] = math.exp(a[0][j])
 		y /= np.sum(y)
+
+		m = 0
+		for j in range(10):
+			if y[0][j] > y[0][m]:
+				m = j
+			if lbs_t[i][0][j] == 1:
+				error += 1 - y[0][j]
+		if lbs_t[i][0][m] == 0:
+			false += 1
+
 		e = lbs_t[i] - y
 		det += ims_t[i].T.dot(e)	
 	weight = np.add((1 - regular) * weight, step * det)
+	print("-------Training------------")
+	print("False Sample: " + str(false))
+	print("Total Error: " + str(error))
+	error_training.append(error)
+	false_training.append(false)
+
+	false = 0
+	error = 0
+	for i in range(2000):
+		a = ims_test[i].dot(weight)
+		for j in range(10):
+			y[0][j] = math.exp(a[0][j])
+		y /= np.sum(y)
+		m = 0
+		for j in range(10):
+			if y[0][j] > y[0][m]:
+				m = j
+			if lbs_test[i][0][j] == 1:
+				error += 1 - y[0][j]
+		if lbs_test[i][0][m] == 0:
+			false += 1
+	print("-------Testing------------")
+	print("False Sample: " + str(false))
+	print("Total Error: " + str(error))
+	error_testing.append(error)
+	false_testing.append(false)
+
 
 	false = 0
 	error = 0
@@ -78,9 +129,19 @@ for loop in range(1000):
 				error += 1 - y[0][j]
 		if lbs_t[i][0][m] == 0:
 			false += 1
+	print("-------Verification-------")
 	print("false:" + str(false))
 	print("error:" + str(error))
-	print("---------------")
+	error_verification.append(error)
+	false_verification.append(false)
+	if false > false_min * 0.999 and error > error_min * 0.999:
+		break
+	if false < false_min:
+		false_min = false
+	if error < error_min:
+		error_min = error
+
+
 
 	
 
