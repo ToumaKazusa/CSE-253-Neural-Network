@@ -14,10 +14,10 @@ label = []
 for i in range(20000):
 	ims[i].append(1)
 	if labels[i] == 2:
-		image.append(np.array(ims[i]).reshape((1, 785))/255)
+		image.append(np.array(ims[i]).reshape((1, 785)) / 255.0)
 		label.append(1)
 	if labels[i] == 3:
-		image.append(np.array(ims[i]).reshape((1, 785))/255)
+		image.append(np.array(ims[i]).reshape((1, 785)) / 255.0)
 		label.append(0)
 
 # Divide into two saperate part, the first 90 percent to be training set, and remain to be verification set
